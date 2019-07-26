@@ -17,7 +17,7 @@ class Population:
         default_synapses = self.default_synapses_weight()
 
         # You can paste the terminal output here to override the default_synapses of the bunnies.
-        # default_synapses = [1.4, 0.6399999999999999, 0.24999999999999994, 1.88, 0.53, 0.3, 0.44999999999999996, -0.54, 0.68, -0.72, -0.8, 0.15999999999999998, -0.67, 1.4100000000000001, 0.24999999999999994, 0.36, 0.44000000000000006, 1.24, 1.08, 0.61]
+        # default_synapses = [2.16, 1.72, 0.52, 1.01, -1.21, 1.95, 0.15000000000000002, 1.63, 1.31, 1.3, 0.5800000000000001, 0.6400000000000001, 1.6700000000000002, -1.12, 1.2599999999999998, 0.30000000000000004, -0.04999999999999993, 0.6200000000000001, 1.1999999999999997, 1.44]
 
         for i in range(self.pop_size):
             self.population.append(Individual(default_synapses))
@@ -53,7 +53,7 @@ class Population:
             synapses = self.default_synapses_weight()
 
         # Create the offsprings and make them mutate.
-        for i in range(self.pop_size):
+        for i in range(self.pop_size - 1):
             newborn = Individual(synapses)
 
             # Send info about how many gens did not improve to the mutate function.
