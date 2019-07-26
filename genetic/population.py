@@ -13,36 +13,11 @@ class Population:
 
     # Create a default population of individuals.
     def create_default_pop(self):
-        # Create the individuals
-
         # Build 20 random synapses weights.
-        default_synapses = [
-            random.randint(-1, 1) / 100,
-            random.randint(-1, 1) / 100,
-            random.randint(-1, 1) / 100,
-            random.randint(-1, 1) / 100,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-        ]
-
+        default_synapses = self.default_synapses_weight()
 
         # You can paste the terminal output here to override the default_synapses of the bunnies.
-        # These synapses weights made the bunnies achieved a high score of 10886
-        # default_synapses = [1.22, 0.030000000000000027, -0.21000000000000002, 1.0, 2.31, 0.010000000000000009, -0.1100000000000001, -1.1400000000000001, -0.97, 1.05, -0.98, 0.11000000000000004, -0.75, 1.25, 1.4100000000000001, -0.9299999999999999, -1.03, 0.33999999999999997, 1.11, -0.029999999999999916]
+        # default_synapses = [1.4, 0.6399999999999999, 0.24999999999999994, 1.88, 0.53, 0.3, 0.44999999999999996, -0.54, 0.68, -0.72, -0.8, 0.15999999999999998, -0.67, 1.4100000000000001, 0.24999999999999994, 0.36, 0.44000000000000006, 1.24, 1.08, 0.61]
 
         for i in range(self.pop_size):
             self.population.append(Individual(default_synapses))
@@ -65,15 +40,47 @@ class Population:
         return self.best_individual
 
     # Breeding involves mutation.
-    def breed(self, best_individual):
+    def breed(self, best_individual, stupidity_factor):
 
+        # Get the brain pattern of the best individual.
         synapses = best_individual.synapses
 
-        # Manually put the best from last pop
+        # Manually put him in the population.
         self.population.append(Individual(synapses))
+
+        #  If the best individual from last population is stupid.
+        if stupidity_factor > 10:
+            synapses = self.default_synapses_weight()
 
         # Create the offsprings and make them mutate.
         for i in range(self.pop_size):
             newborn = Individual(synapses)
-            newborn.mutate()
+
+            # Send info about how many gens did not improve to the mutate function.
+            newborn.mutate(stupidity_factor)
             self.population.append(newborn)
+
+    # Build 20 random synapses weights.
+    def default_synapses_weight(self):
+        return [
+            random.randint(-9, 9) / 100,
+            random.randint(-9, 9) / 100,
+            random.randint(-9, 9) / 100,
+            random.randint(-9, 9) / 100,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+        ]

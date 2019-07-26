@@ -1,5 +1,7 @@
 # Neural bunnies.
 
+![alt text](https://github.com/keolaclancy/neural-bunnies/neural-bunnies-1.png "Neural Bunnies")
+
 ## What is this ?
 This is my first python project.
 I wanted to learn the basics of a neural network system.
