@@ -1,8 +1,5 @@
 import pygame
-import math
-
 from genetic.population import Population
-from src.obstacle_manager import ObstacleManager
 
 
 # This is the main genetic handler.
@@ -23,6 +20,11 @@ class Genetic:
         self.gen_number = 1  # The generation number
         self.best_score = 0  # The best score for an individual
 
+        # pop scores.
+        self.best_pop_score = 0
+        self.gens_without_hs = 0
+
+
     # Enable or disable the training.
     def toggle_training(self, enabled):
         if enabled:
@@ -41,13 +43,31 @@ class Genetic:
         # Get the last gen survivor
         best_individual = self.pop.get_best_individual(self.pool)
 
+        # Count how many gens could not improve the high score.
+        if self.best_pop_score < best_individual.score:
+            self.best_pop_score = best_individual.score
+            self.gens_without_hs = 0
+        else:
+            self.gens_without_hs += 1
+
         # Reset the pool.
         self.pool = []
         self.gen_number += 1
 
         # Prepare next population.
-        self.pop.breed(best_individual)
+        self.pop.breed(best_individual, self.stupidity_factor(self.gens_without_hs))
         self.pool = self.pop.population
+
+    # Define the supidity factor of a pop depending on how many gens didn't beat high score.
+    def stupidity_factor(self, gens_without_hs):
+
+        if gens_without_hs == 5:
+            print('Population is maybe stupid')
+        if gens_without_hs > 10:
+            print('Population is really stupid')
+        # Maybe tweak this return result.
+        return gens_without_hs
+
 
     def gen_watcher(self):
         best_individual = self.pop.get_best_individual(self.pool)
@@ -111,8 +131,6 @@ class Genetic:
         j4 = player.sigmoid((i1 * w_i1_j4 + i2 * w_i2_j4 + i3 * w_i3_j4 + i4 * w_i4_j4) + bias)
 
         k1 = j1 * w_j1_k1 + j2 * w_j2_k1 + j3 * w_j3_k1 + j4 * w_j4_k1
-        #
-        # k1 = k1 / 10
 
         return player.sigmoid(k1)
 
@@ -135,10 +153,10 @@ class Genetic:
             obstacle_spacing = 1
 
         jump_fall = 0
-        # obstacle_spacing = 0
-        # if player.jumping:
-        #     if player.falling:
-        #         jump_fall = 1
+        obstacle_spacing = 0
+        if player.jumping:
+            if player.falling:
+                jump_fall = 1
 
         inputs = [
             jump_fall,  # If player is already jumping
@@ -193,6 +211,13 @@ class Genetic:
         text = self.font.render(gen_string, True, color)
         text_rect = text.get_rect()
         text_rect.top = 60
+        text_rect.right = self.size[0] - 20
+        self.screen.blit(text, text_rect)
+
+        gen_string = 'Stupidity factor : {:05d}'.format(self.gens_without_hs)
+        text = self.font.render(gen_string, True, color)
+        text_rect = text.get_rect()
+        text_rect.top = 80
         text_rect.right = self.size[0] - 20
         self.screen.blit(text, text_rect)
 

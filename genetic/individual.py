@@ -17,18 +17,19 @@ class Individual(Player):
         self.synapses = synapses
 
     # Update synapses weights.
-    def mutate(self):
-        synapses = self.synapses
-        self.synapses = []
+    # The more generations that can't beat high score, the more we mutate.
+    def mutate(self, stupidity_factor):
 
+        synapses = self.synapses
+
+        self.synapses = []
         # For each weight, change it a little bit.
         # The best the fitness, the less the change
         for synapse in synapses:
-            rand = random.randint(0, 100)
+            rand = random.randint(0, 100) + stupidity_factor * 2
             delta = rand / 100
 
-            # TODO : The higher the score, the less we should mutate.
-            # TODO : If the bunnies are stuck doing stupid things, some should mutate more.
+            # If the bunnies are stuck doing stupid things, some should mutate more.
             if delta > 0.5:
                 new_weight = synapse + delta
             elif delta > 0.9:

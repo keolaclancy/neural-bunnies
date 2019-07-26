@@ -1,5 +1,4 @@
 import pygame
-import random
 
 
 # This is the player.
